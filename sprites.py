@@ -1,7 +1,7 @@
 import pygame as pg
 
 class FontSprite(pg.sprite.Sprite):
-    def __init__(self, x, y, text, font_name, font_size, placement = "center", color = "#000000"):
+    def __init__(self, x, y, text, font_name, font_size, placement="center", color="#000000"):
         super().__init__()
         
         font = pg.font.SysFont(font_name, font_size)

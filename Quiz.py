@@ -12,8 +12,10 @@ class Quiz:
 
         self.questions = []
         for symbol, element in ELEMENTS.items():
-            if gamemode == 1 or gamemode == 2:
+            if gamemode == 1:
                 self.questions.append(MultipleChoiceQuestion(symbol, element))
+            else:
+                self.questions.append(Question(symbol, element))
         shuffle(self.questions)
     
     def get_score(self):

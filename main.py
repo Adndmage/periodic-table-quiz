@@ -87,8 +87,8 @@ def main():
 
         if game.quiz:
             try:
-                dynamic_text.add(FontSprite(100, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20))
-                dynamic_text.add(FontSprite(100, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20))
+                dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
+                dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
                 dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
 
                 if game.get_gamemode() == 1:
@@ -165,12 +165,12 @@ def main():
                     if not input_box:
                         # Text input for Text Input gamemode
                         input_box = TextBox(game.screen,
-                            30, 140, 580, 36, # Coordinates and size
+                            90, 250, 540, 36, # Coordinates and size
                             borderThickness=1,
                             borderColour="#000000",
                             colour=("#D3D3D3"),
                             radius=2,
-                            font=pg.font.SysFont("lucidasanstypewriterregular", 12),
+                            font=pg.font.SysFont("lucidasanstypewriterregular", 16),
                         )
 
             except:
@@ -222,6 +222,7 @@ def main():
             elif game.get_screen_number() == 2:
                 game_selection_menu_text.draw(game.screen)
 
+                button_3 = None
                 button_4 = None
                 input_box = None
 
@@ -253,21 +254,6 @@ def main():
                 pressedColour="#C1E1C1",
                 radius=2,
                 onClick=lambda: game.set_screen_and_gamemode(3, 2) # Set screen to question type and set gamemode to Text Input
-                )
-
-                button_3 = Button(game.screen,
-                235, 385, 250, 100, # Coordinates and size
-                text="True or False",
-                font=pg.font.SysFont("lucidasanstypewriterregular", 20),
-                margin=10,
-                borderRadius=2,
-                borderThickness=2,
-                colour="#D3D3D3",
-                borderColour="#000000",
-                inactiveColour="#FFFFFF",
-                pressedColour="#C1E1C1",
-                radius=2,
-                onClick=lambda: game.set_screen_and_gamemode(3, 3) # Set screen to question type and set gamemode to True or False
                 )
             
             elif game.get_screen_number() == 3:
