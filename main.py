@@ -22,6 +22,11 @@ ELEMENT_NUMBERS = [
     6, 7, 8, 9, 10,
     ]
 
+ELEMENTS = {
+    "H": "Hydrogen", "He": "Helium", "Li": "Lithium", "Be": "Beryllium", "B": "Boron",
+    "C": "Carbon", "N": "Nitrogen", "O": "Oxygen", "F": "Fluorine", "Ne": "Neon"
+}
+
 # Pygame standard setup
 pg.init()
 game = Game(WIDTH, HEIGHT)
@@ -43,11 +48,14 @@ question_selection_menu_text.add(FontSprite(WIDTH/2, 60, "Select Question Type",
 settings_text = pg.sprite.Group()
 settings_text.add(FontSprite(WIDTH/2, 60, "Settings", "lucidasanstypewriter", 54))
 
+# Question text
+question_text = pg.sprite.Group()
+
 def main():
     # Game loop
     while game.running:
-        
         events = pg.event.get()
+        question_text.empty() # Empties question text, so it resets every frame
 
         for event in events:
             if event.type == pg.QUIT:
@@ -55,190 +63,265 @@ def main():
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_BACKSPACE:
-                    if game.screen_number == -1:
-                        game.screen_number = 1
-                    elif game.screen_number == 2:
-                        game.screen_number = 1
-                    elif game.screen_number == 3:
-                        game.screen_number = 2
-                    elif game.screen_number == 4:
-                        game.screen_number = 2
+                    if game.quiz:
+                        game.quiz = None
+                        game.set_screen(1)
+                    elif game.get_screen_number() == -1:
+                        game.set_screen(1)
+                    elif game.get_screen_number() == 2:
+                        game.set_screen(1)
+                    elif game.get_screen_number() == 3:
+                        game.set_screen(2)
 
         # Draws the screen depending on the screen number
         game.screen.fill(game.screen_color)
 
-        # Main menu screen
-        if game.screen_number == 1:
-            main_menu_text.draw(game.screen)
+        if game.quiz:
+            try:
+                if game.get_gamemode() == "multiple choice":
+                    question_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol of {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
 
-            button_3 = None
-            button_4 = None
+                    # if game.get_gamemode == "multiple choice":
+                    answer_choices = game.quiz.questions[game.current_question_number].choices
+
+                    button_1 = Button(game.screen,
+                    85, 235, 250, 100, # Coordinates and size
+                    text=answer_choices[0],
+                    font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                    margin=10,
+                    borderRadius=2,
+                    borderThickness=2,
+                    colour="#D3D3D3",
+                    borderColour="#000000",
+                    inactiveColour="#FFFFFF",
+                    pressedColour="#C1E1C1",
+                    radius=2,
+                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[0]))
+                    )
+
+                    button_2 = Button(game.screen,
+                    385, 235, 250, 100, # Coordinates and size
+                    text=answer_choices[1],
+                    font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                    margin=10,
+                    borderRadius=2,
+                    borderThickness=2,
+                    colour="#D3D3D3",
+                    borderColour="#000000",
+                    inactiveColour="#FFFFFF",
+                    pressedColour="#C1E1C1",
+                    radius=2,
+                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[1]))
+                    )
+
+                    button_3 = Button(game.screen,
+                    85, 385, 250, 100, # Coordinates and size
+                    text=answer_choices[2],
+                    font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                    margin=10,
+                    borderRadius=2,
+                    borderThickness=2,
+                    colour="#D3D3D3",
+                    borderColour="#000000",
+                    inactiveColour="#FFFFFF",
+                    pressedColour="#C1E1C1",
+                    radius=2,
+                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[2]))
+                    )
+
+                    button_4 = Button(game.screen,
+                    385, 385, 250, 100, # Coordinates and size
+                    text=answer_choices[3],
+                    font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                    margin=10,
+                    borderRadius=2,
+                    borderThickness=2,
+                    colour="#D3D3D3",
+                    borderColour="#000000",
+                    inactiveColour="#FFFFFF",
+                    pressedColour="#C1E1C1",
+                    radius=2,
+                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[3]))
+                    )
+            except:
+                game.quiz = None
+                game.set_screen(1)
+                print("No more questions left")
+        
+        else:
+            # Main menu screen
+            if game.get_screen_number() == 1:
+                main_menu_text.draw(game.screen)
+
+                button_3 = None
+                button_4 = None
+                
+                # Buttons
+                button_1 = Button(game.screen,
+                100, 235, WIDTH - 200, 100, # Coordinates and size
+                text="Start Game",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 30),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen(2) # Set screen to game type
+                )
+
+                button_2 = Button(game.screen,
+                100, 385, WIDTH - 200, 100, # Coordinates and size
+                text="Settings",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 30),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen(-1) # Set screen to settings
+                )
+
+            elif game.get_screen_number() == 2:
+                game_selection_menu_text.draw(game.screen)
+
+                button_4 = None
+
+                button_1 = Button(game.screen,
+                85, 235, 250, 100, # Coordinates and size
+                text="Multiple Choice",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 20),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_gamemode(3, "multiple choice") # Set screen to question type and set game to Multiple Choice
+                )
+
+                button_2 = Button(game.screen,
+                385, 235, 250, 100, # Coordinates and size
+                text="Text Input",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 20),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_gamemode(3, "text input") # Set screen to question type and set game to Text Input
+                )
+
+                button_3 = Button(game.screen,
+                235, 385, 250, 100, # Coordinates and size
+                text="True or False",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 20),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_gamemode(3, "true or false") # Set screen to question type and set game to True or False
+                )
             
-            # Buttons
-            button_1 = Button(game.screen,
-            100, 235, WIDTH - 200, 100, # Coordinates and size
-            text="Start Game",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 30),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen(2) # Set screen to game type
-            )
+            elif game.get_screen_number() == 3:
+                question_selection_menu_text.draw(game.screen)
 
-            button_2 = Button(game.screen,
-            100, 385, WIDTH - 200, 100, # Coordinates and size
-            text="Settings",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 30),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen(-1) # Set screen to settings
-            )
+                button_1 = Button(game.screen,
+                85, 235, 250, 100, # Coordinates and size
+                text="Name -> Atomic Number",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "name to number") # Set screen to question type and set game to Multiple Choice
+                )
 
-        elif game.screen_number == 2:
-            game_selection_menu_text.draw(game.screen)
+                button_2 = Button(game.screen,
+                385, 235, 250, 100, # Coordinates and size
+                text="Atomic Number -> Name",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "number to name") # Set screen to question type and set game to Text Input
+                )
 
-            button_4 = None
+                button_3 = Button(game.screen,
+                85, 385, 250, 100, # Coordinates and size
+                text="Name -> Symbol",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "symbol to number") # Set screen to question type and set game to True or False
+                )
 
-            button_1 = Button(game.screen,
-            85, 235, 250, 100, # Coordinates and size
-            text="Multiple Choice",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 20),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "multiple choice") # Set screen to question type and set game to Multiple Choice
-            )
+                button_4 = Button(game.screen,
+                385, 385, 250, 100, # Coordinates and size
+                text="Symbol -> Name",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 16),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "number to symbol") # Set screen to question type and set game to True or False
+                )
 
-            button_2 = Button(game.screen,
-            385, 235, 250, 100, # Coordinates and size
-            text="Text Input",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 20),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "text input") # Set screen to question type and set game to Text Input
-            )
+            elif game.get_screen_number() == -1:
+                settings_text.draw(game.screen)
+                button_2 = None
+                button_3 = None
+                button_4 = None
 
-            button_3 = Button(game.screen,
-            235, 385, 250, 100, # Coordinates and size
-            text="True or False",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 20),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "true or false") # Set screen to question type and set game to True or False
-            )
+                button_1 = Button(game.screen,
+                100, 235, WIDTH - 200, 100, # Coordinates and size
+                text="Toggle Dark Mode",
+                font=pg.font.SysFont("lucidasanstypewriterregular", 30),
+                margin=10,
+                borderRadius=2,
+                borderThickness=2,
+                colour="#D3D3D3",
+                borderColour="#000000",
+                inactiveColour="#FFFFFF",
+                pressedColour="#C1E1C1",
+                radius=2,
+                onClick=lambda: game.toggle_dark_mode() # Set screen to main menu
+                )
         
-        elif game.screen_number == 3:
-            question_selection_menu_text.draw(game.screen)
-
-            button_1 = Button(game.screen,
-            85, 235, 250, 100, # Coordinates and size
-            text="Atomic Number from Name",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 16),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "multiple choice") # Set screen to question type and set game to Multiple Choice
-            )
-
-            button_2 = Button(game.screen,
-            385, 235, 250, 100, # Coordinates and size
-            text="Name from Atomic Number",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 16),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "text input") # Set screen to question type and set game to Text Input
-            )
-
-            button_3 = Button(game.screen,
-            85, 385, 250, 100, # Coordinates and size
-            text="Symbol from Name",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 16),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "true or false") # Set screen to question type and set game to True or False
-            )
-
-            button_4 = Button(game.screen,
-            385, 385, 250, 100, # Coordinates and size
-            text="Name from Symbol",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 16),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.set_screen_and_quiz_type(3, "true or false") # Set screen to question type and set game to True or False
-            )
-
-        elif game.screen_number == -1:
-            settings_text.draw(game.screen)
-            button_2 = None
-            button_3 = None
-            button_4 = None
-
-            button_1 = Button(game.screen,
-            100, 235, WIDTH - 200, 100, # Coordinates and size
-            text="Toggle Dark Mode",
-            font=pg.font.SysFont("lucidasanstypewriterregular", 30),
-            margin=10,
-            borderRadius=2,
-            borderThickness=2,
-            colour="#D3D3D3",
-            borderColour="#000000",
-            inactiveColour="#FFFFFF",
-            pressedColour="#C1E1C1",
-            radius=2,
-            onClick=lambda: game.toggle_dark_mode() # Set screen to main menu
-            )
-        
+        question_text.draw(game.screen)
         pygame_widgets.update(events)
         pg.display.flip()
         game.clock.tick(60)  # limits FPS to 60
