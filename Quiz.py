@@ -12,7 +12,7 @@ class Quiz:
 
         self.questions = []
         for symbol, element in ELEMENTS.items():
-            if gamemode == 1:
+            if gamemode == 1 or gamemode == 2:
                 self.questions.append(MultipleChoiceQuestion(symbol, element))
         shuffle(self.questions)
     

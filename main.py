@@ -1,7 +1,7 @@
 import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
-from pygame_widgets.button import ButtonArray
+from pygame_widgets.textbox import TextBox
 from Game import Game
 from Question import Question, MultipleChoiceQuestion #, InputQuestion, TrueFalseQuestion
 from Quiz import Quiz
@@ -62,7 +62,7 @@ def main():
                 game.running = False
 
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_BACKSPACE:
+                if event.key == pg.K_ESCAPE:
                     if game.quiz:
                         game.quiz = None
                         game.set_screen(1)
@@ -72,16 +72,27 @@ def main():
                         game.set_screen(1)
                     elif game.get_screen_number() == 3:
                         game.set_screen(2)
+                if event.key == pg.K_RETURN and game.get_gamemode() == 2 and input_box and game.quiz:
+                    user_answer = ELEMENTS.get(input_box.getText())
+
+                    if user_answer:
+                        game.check_answer(user_answer)
+                    else:
+                        game.check_answer("")
+                    
+                    input_box.setText("")
 
         # Draws the screen depending on the screen number
         game.screen.fill(game.screen_color)
 
         if game.quiz:
             try:
+                dynamic_text.add(FontSprite(100, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20))
+                dynamic_text.add(FontSprite(100, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20))
+                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
+
                 if game.get_gamemode() == 1:
-                    dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
-                    dynamic_text.add(FontSprite(100, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20))
-                    dynamic_text.add(FontSprite(100, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20))
+                    input_box = None
 
                     answer_choices = game.quiz.questions[game.current_question_number].choices
 
@@ -144,6 +155,24 @@ def main():
                     radius=2,
                     onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[3]))
                     )
+
+                elif game.get_gamemode() == 2:
+                    button_1 = None
+                    button_2 = None
+                    button_3 = None
+                    button_4 = None
+
+                    if not input_box:
+                        # Text input for Text Input gamemode
+                        input_box = TextBox(game.screen,
+                            30, 140, 580, 36, # Coordinates and size
+                            borderThickness=1,
+                            borderColour="#000000",
+                            colour=("#D3D3D3"),
+                            radius=2,
+                            font=pg.font.SysFont("lucidasanstypewriterregular", 12),
+                        )
+
             except:
                 game.set_highscore(game.quiz.get_score())
                 game.quiz = None
@@ -157,6 +186,7 @@ def main():
 
                 button_3 = None
                 button_4 = None
+                input_box = None
                 
                 # Buttons
                 button_1 = Button(game.screen,
@@ -193,6 +223,7 @@ def main():
                 game_selection_menu_text.draw(game.screen)
 
                 button_4 = None
+                input_box = None
 
                 button_1 = Button(game.screen,
                 85, 235, 250, 100, # Coordinates and size
@@ -241,6 +272,8 @@ def main():
             
             elif game.get_screen_number() == 3:
                 question_selection_menu_text.draw(game.screen)
+
+                input_box = None
 
                 button_1 = Button(game.screen,
                 85, 235, 250, 100, # Coordinates and size
@@ -304,9 +337,11 @@ def main():
 
             elif game.get_screen_number() == -1:
                 settings_text.draw(game.screen)
+
                 button_2 = None
                 button_3 = None
                 button_4 = None
+                input_box = None
 
                 button_1 = Button(game.screen,
                 100, 235, WIDTH - 200, 100, # Coordinates and size
