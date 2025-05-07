@@ -14,15 +14,14 @@ class Question:
         return f"Information: {self.information}\nAnswer: {self.answer}"
 
     def check_answer(self, user_answer):
+        print(user_answer)
         return user_answer.lower() == self.answer.lower()
 
     
 class MultipleChoiceQuestion(Question):
-    def __init__(self, information, answer):
+    def __init__(self, information, answer, choices):
         super().__init__(information, answer)
-        self.choices = sample([information for information, answer in ELEMENTS.items() if information != self.information], 3) # List comprehension used to get a list of symbol to pick from
-        self.choices.append(self.information)
-        shuffle(self.choices)
+        self.choices = choices
 
     def display(self):
         print(self.information)

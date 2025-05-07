@@ -54,7 +54,7 @@ class Game:
         self.screen_color = "#323339" if self.screen_color == "white" else "white"
 
     def start_quiz(self):
-        self.quiz = Quiz(self.__gamemode)
+        self.quiz = Quiz(self.__gamemode, self.__question_type)
         self.current_question_number = 0
         self.timer = 0
     

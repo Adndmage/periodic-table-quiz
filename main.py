@@ -73,12 +73,8 @@ def main():
                     elif game.get_screen_number() == 3:
                         game.set_screen(2)
                 if event.key == pg.K_RETURN and game.get_gamemode() == 2 and input_box and game.quiz:
-                    user_answer = ELEMENTS.get(input_box.getText())
-
-                    if user_answer:
-                        game.check_answer(user_answer)
-                    else:
-                        game.check_answer("")
+                    user_answer = input_box.getText()
+                    game.check_answer(user_answer)
                     
                     input_box.setText("")
 
@@ -89,7 +85,7 @@ def main():
             try:
                 dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
                 dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
-                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
+                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].information}?", "lucidasanstypewriter", 32))
 
                 if game.get_gamemode() == 1:
                     input_box = None
@@ -108,7 +104,7 @@ def main():
                     inactiveColour="#FFFFFF",
                     pressedColour="#C1E1C1",
                     radius=2,
-                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[0]))
+                    onClick=lambda: game.check_answer(answer_choices[0])
                     )
 
                     button_2 = Button(game.screen,
@@ -123,7 +119,7 @@ def main():
                     inactiveColour="#FFFFFF",
                     pressedColour="#C1E1C1",
                     radius=2,
-                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[1]))
+                    onClick=lambda: game.check_answer(answer_choices[1])
                     )
 
                     button_3 = Button(game.screen,
@@ -138,7 +134,7 @@ def main():
                     inactiveColour="#FFFFFF",
                     pressedColour="#C1E1C1",
                     radius=2,
-                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[2]))
+                    onClick=lambda: game.check_answer(answer_choices[2])
                     )
 
                     button_4 = Button(game.screen,
@@ -153,7 +149,7 @@ def main():
                     inactiveColour="#FFFFFF",
                     pressedColour="#C1E1C1",
                     radius=2,
-                    onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[3]))
+                    onClick=lambda: game.check_answer(answer_choices[3])
                     )
 
                 elif game.get_gamemode() == 2:
