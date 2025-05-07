@@ -9,6 +9,12 @@ from sprites import FontSprite
 
 # Constants
 WIDTH, HEIGHT = 720, 720
+QUESTION_TITLES = {
+    1: "Atomic Number",
+    2: "Name",
+    3: "Symbol",
+    4: "Name"
+}
 
 # Pygame standard setup
 pg.init()
@@ -31,14 +37,11 @@ question_selection_menu_text.add(FontSprite(WIDTH/2, 50, "Select Question Type",
 settings_text = pg.sprite.Group()
 settings_text.add(FontSprite(WIDTH/2, 50, "Settings", "lucidasanstypewriter", 54))
 
-# Dynamic text that might get updated with new information
-dynamic_text = pg.sprite.Group()
-
 def main():
     # Game loop
     while game.running:
         events = pg.event.get()
-        dynamic_text.empty() # Empties dynamic text, so it resets every frame
+        game.dynamic_text.empty() # Empties dynamic text, so it resets every frame
 
         for event in events:
             if event.type == pg.QUIT:
@@ -66,10 +69,10 @@ def main():
 
         if game.quiz:
             try:
-                dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
-                dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
-                question_title_text = "Atomic Number" if game.get_question_type() == 1 else "Name" if game.get_question_type() == 2 else "Symbol" if game.get_question_type() == 3 else "Name" if game.get_question_type() == 4 else "Error"
-                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.get_questions()[game.get_current_question_number()].get_information()}?", "lucidasanstypewriter", 28))
+                game.dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
+                game.dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
+                question_title_text = QUESTION_TITLES.get(game.get_question_type(), "Error")
+                game.dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.get_questions()[game.get_current_question_number()].get_information()}?", "lucidasanstypewriter", 28))
 
                 if game.get_gamemode() == 1:
                     input_box = None
@@ -324,7 +327,7 @@ def main():
                 onClick=lambda: game.toggle_dark_mode() # Set screen to main menu
                 )
         
-        dynamic_text.draw(game.screen)
+        game.dynamic_text.draw(game.screen)
         pygame_widgets.update(events)
         pg.display.flip()
         game.clock.tick(60)  # limits FPS to 60

@@ -8,6 +8,7 @@ class Game:
         pg.display.set_caption("Periodic Table Quiz")
         self.clock = pg.time.Clock()
         self.running = True
+        self.dynamic_text = pg.sprite.Group() # Dynamic text that might get updated with new information
 
         # UI and navigation
         self.__screen_color = "white" # Default screen color
@@ -67,4 +68,3 @@ class Game:
     def check_answer(self, user_answer):
         self.quiz.check_answer(user_answer, self.__current_question_number, 100)
         self.__current_question_number += 1
-    

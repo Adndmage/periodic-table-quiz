@@ -15,7 +15,6 @@ class Question:
         return self.__answer
 
     def check_answer(self, user_answer):
-        print(user_answer)
         return user_answer.lower() == self.__answer.lower()
 
 
