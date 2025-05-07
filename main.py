@@ -9,23 +9,6 @@ from sprites import FontSprite
 
 # Constants
 WIDTH, HEIGHT = 720, 720
-ELEMENT_NAMES = [
-    "Hydrogen", "Helium", "Lithium", "Beryllium", "Boron",
-    "Carbon", "Nitrogen", "Oxygen", "Fluorine", "Neon",
-    ]
-ELEMENT_SYMBOLS = [
-    "H", "He", "Li", "Be", "B",
-    "C", "N", "O", "F", "Ne",
-    ]
-ELEMENT_NUMBERS = [
-    1, 2, 3, 4, 5,
-    6, 7, 8, 9, 10,
-    ]
-
-ELEMENTS = {
-    "H": "Hydrogen", "He": "Helium", "Li": "Lithium", "Be": "Beryllium", "B": "Boron",
-    "C": "Carbon", "N": "Nitrogen", "O": "Oxygen", "F": "Fluorine", "Ne": "Neon"
-}
 
 # Pygame standard setup
 pg.init()
@@ -79,19 +62,19 @@ def main():
                     input_box.setText("")
 
         # Draws the screen depending on the screen number
-        game.screen.fill(game.screen_color)
+        game.screen.fill(game.get_screen_color())
 
         if game.quiz:
             try:
                 dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
                 dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
                 question_title_text = "Atomic Number" if game.get_question_type() == 1 else "Name" if game.get_question_type() == 2 else "Symbol" if game.get_question_type() == 3 else "Name" if game.get_question_type() == 4 else "Error"
-                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.questions[game.current_question_number].information}?", "lucidasanstypewriter", 28))
+                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.get_questions()[game.get_current_question_number()].get_information()}?", "lucidasanstypewriter", 28))
 
                 if game.get_gamemode() == 1:
                     input_box = None
 
-                    answer_choices = game.quiz.questions[game.current_question_number].choices
+                    answer_choices = game.quiz.get_questions()[game.get_current_question_number()].get_choices()
 
                     button_1 = Button(game.screen,
                     85, 235, 250, 100, # Coordinates and size

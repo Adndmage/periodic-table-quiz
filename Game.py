@@ -10,11 +10,11 @@ class Game:
         self.running = True
 
         # UI and navigation
-        self.screen_color = "white" # Default screen color
+        self.__screen_color = "white" # Default screen color
         self.__screen_number = 1 # 1 for main menu, 2 for question type, 3 for quiz type, -1 for settings
         self.__gamemode = None
         self.__question_type = None
-        self.timer = 0
+        # self.timer = 0
 
         # Quiz related attributes
         self.__highscores = [[0, 0, 0, 0], # Multidimensional list to store highscores for each gamemode and question type
@@ -22,7 +22,10 @@ class Game:
                              [0, 0, 0, 0]]
         
         self.quiz = None # Current quiz object
-        self.current_question_number = 0 # Current question number in the quiz
+        self.__current_question_number = 0 # Current question number in the quiz
+    
+    def get_screen_color(self):
+        return self.__screen_color
     
     def get_screen_number(self):
         return self.__screen_number
@@ -35,6 +38,9 @@ class Game:
     
     def get_highscore(self):
         return self.__highscores[self.__gamemode - 1][self.__question_type - 1]
+
+    def get_current_question_number(self):
+        return self.__current_question_number
 
     def set_screen(self, screen_number):
         self.__screen_number = screen_number
@@ -51,14 +57,14 @@ class Game:
         self.__highscores[self.__gamemode - 1][self.__question_type - 1] = new_highscore
 
     def toggle_dark_mode(self):
-        self.screen_color = "#323339" if self.screen_color == "white" else "white"
+        self.__screen_color = "#323339" if self.__screen_color == "white" else "white"
 
     def start_quiz(self):
         self.quiz = Quiz(self.__gamemode, self.__question_type)
-        self.current_question_number = 0
+        self.__current_question_number = 0
         self.timer = 0
     
     def check_answer(self, user_answer):
-        self.quiz.check_answer(user_answer, self.current_question_number, 100)
-        self.current_question_number += 1
+        self.quiz.check_answer(user_answer, self.__current_question_number, 100)
+        self.__current_question_number += 1
     
