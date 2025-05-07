@@ -60,7 +60,7 @@ class Game:
         self.start_quiz()
     
     def set_highscore(self, new_highscore):
-        self.__highscores[self.__gamemode - 1][self.__question_type - 1] = new_highscore
+        self.__highscores[self.__gamemode - 1][self.__question_type - 1] = max(self.__highscores[self.__gamemode - 1][self.__question_type - 1], new_highscore)
 
     def toggle_dark_mode(self):
         self.__screen_color = "#323339" if self.__screen_color == "white" else "white"
