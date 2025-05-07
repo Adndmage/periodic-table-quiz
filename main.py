@@ -85,7 +85,8 @@ def main():
             try:
                 dynamic_text.add(FontSprite(50, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20, placement="midleft"))
                 dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
-                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].information}?", "lucidasanstypewriter", 32))
+                question_title_text = "Atomic Number" if game.get_question_type() == 1 else "Name" if game.get_question_type() == 2 else "Symbol" if game.get_question_type() == 3 else "Name" if game.get_question_type() == 4 else "Error"
+                dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.questions[game.current_question_number].information}?", "lucidasanstypewriter", 28))
 
                 if game.get_gamemode() == 1:
                     input_box = None
