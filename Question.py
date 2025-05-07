@@ -1,5 +1,12 @@
 from random import sample, shuffle
 
+"""
+Basic Question class that checks stores information about information for a question and the answer to it.
+It also checks if an answer is correct.
+The Multiple Choice Question child has an additional attribute in storing the answer options.
+"""
+
+
 class Question:
     def __init__(self, information, answer):
         self.__information = information
@@ -26,7 +33,7 @@ class MultipleChoiceQuestion(Question):
     def get_choices(self):
         return self.__choices
 
-    def display(self):
-        print(self.__information)
-        for i, choice in enumerate(self.__choices):
-            print(f"{i + 1}. {choice}")
+    # def display(self):
+    #     print(self.__information)
+    #     for i, choice in enumerate(self.__choices):
+    #         print(f"{i + 1}. {choice}")

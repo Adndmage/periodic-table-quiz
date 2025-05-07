@@ -1,6 +1,11 @@
 import pygame as pg
 from Quiz import Quiz
 
+"""
+The Game class that is used to handle most of the games data and updating of this data.
+"""
+
+
 class Game:
     def __init__(self, width, height):
         # Pygame setup attributes

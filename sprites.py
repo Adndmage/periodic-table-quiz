@@ -1,5 +1,11 @@
 import pygame as pg
 
+"""
+Here might be stored Pygame sprite classes for the game.
+The Font Sprite class is used for easier customization of text displayed in the game.
+"""
+
+
 class FontSprite(pg.sprite.Sprite):
     def __init__(self, x, y, text, font_name, font_size, placement="center", color="#000000"):
         super().__init__()

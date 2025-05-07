@@ -38,6 +38,13 @@ settings_text = pg.sprite.Group()
 settings_text.add(FontSprite(WIDTH/2, 50, "Settings", "lucidasanstypewriter", 54))
 
 def main():
+    """
+    The games game loop. Every second the game is updated 60 times (60 fps).
+    Pygame_widgets buttons and inputs are used. To update these the variables must be redeclared or erased.
+    This is why multiple declaration of the same variable names, but with different values are seen.
+    Pygame handles the display of everything as well as key inputs from the user.
+    """
+
     # Game loop
     while game.running:
         events = pg.event.get()

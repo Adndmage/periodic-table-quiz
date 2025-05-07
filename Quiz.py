@@ -1,6 +1,12 @@
 from Question import *
 from random import sample, shuffle
 
+"""
+Quiz class that in itself stores a series of questions.
+Constants with different information about elements are used to get the questions and answers.
+"""
+
+
 # Quiz question constants
 ELEMENT_NAMES = [
     "Hydrogen", "Helium", "Lithium", "Beryllium", "Boron",
