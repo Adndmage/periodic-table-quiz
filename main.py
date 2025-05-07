@@ -38,24 +38,24 @@ main_menu_text.add(FontSprite(WIDTH/2, 120, "Periodic Table Quiz", "lucidasansty
 
 # Quiz type selection menu text
 game_selection_menu_text = pg.sprite.Group()
-game_selection_menu_text.add(FontSprite(WIDTH/2, 60, "Select Game Type", "lucidasanstypewriter", 54))
+game_selection_menu_text.add(FontSprite(WIDTH/2, 50, "Select Game Type", "lucidasanstypewriter", 54))
 
 # Question type selection menu text
 question_selection_menu_text = pg.sprite.Group()
-question_selection_menu_text.add(FontSprite(WIDTH/2, 60, "Select Question Type", "lucidasanstypewriter", 54))
+question_selection_menu_text.add(FontSprite(WIDTH/2, 50, "Select Question Type", "lucidasanstypewriter", 54))
 
 # Settings text
 settings_text = pg.sprite.Group()
-settings_text.add(FontSprite(WIDTH/2, 60, "Settings", "lucidasanstypewriter", 54))
+settings_text.add(FontSprite(WIDTH/2, 50, "Settings", "lucidasanstypewriter", 54))
 
-# Question text
-question_text = pg.sprite.Group()
+# Dynamic text that might get updated with new information
+dynamic_text = pg.sprite.Group()
 
 def main():
     # Game loop
     while game.running:
         events = pg.event.get()
-        question_text.empty() # Empties question text, so it resets every frame
+        dynamic_text.empty() # Empties dynamic text, so it resets every frame
 
         for event in events:
             if event.type == pg.QUIT:
@@ -78,10 +78,11 @@ def main():
 
         if game.quiz:
             try:
-                if game.get_gamemode() == "multiple choice":
-                    question_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol of {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
+                if game.get_gamemode() == 1:
+                    dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the symbol for {game.quiz.questions[game.current_question_number].answer}?", "lucidasanstypewriter", 32))
+                    dynamic_text.add(FontSprite(100, 100, f"Score: {game.quiz.get_score()}", "lucidasanstypewriter", 20))
+                    dynamic_text.add(FontSprite(100, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20))
 
-                    # if game.get_gamemode == "multiple choice":
                     answer_choices = game.quiz.questions[game.current_question_number].choices
 
                     button_1 = Button(game.screen,
@@ -144,6 +145,7 @@ def main():
                     onClick=lambda: game.check_answer(ELEMENTS.get(answer_choices[3]))
                     )
             except:
+                game.set_highscore(game.quiz.get_score())
                 game.quiz = None
                 game.set_screen(1)
                 print("No more questions left")
@@ -204,7 +206,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_gamemode(3, "multiple choice") # Set screen to question type and set game to Multiple Choice
+                onClick=lambda: game.set_screen_and_gamemode(3, 1) # Set screen to question type and set gamemode to Multiple Choice
                 )
 
                 button_2 = Button(game.screen,
@@ -219,7 +221,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_gamemode(3, "text input") # Set screen to question type and set game to Text Input
+                onClick=lambda: game.set_screen_and_gamemode(3, 2) # Set screen to question type and set gamemode to Text Input
                 )
 
                 button_3 = Button(game.screen,
@@ -234,7 +236,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_gamemode(3, "true or false") # Set screen to question type and set game to True or False
+                onClick=lambda: game.set_screen_and_gamemode(3, 3) # Set screen to question type and set gamemode to True or False
                 )
             
             elif game.get_screen_number() == 3:
@@ -252,7 +254,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "name to number") # Set screen to question type and set game to Multiple Choice
+                onClick=lambda: game.set_question_type_and_start_quiz(1) # Start quiz and set question type to name to number
                 )
 
                 button_2 = Button(game.screen,
@@ -267,7 +269,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "number to name") # Set screen to question type and set game to Text Input
+                onClick=lambda: game.set_question_type_and_start_quiz(2) # Start quiz and set question type to number to name
                 )
 
                 button_3 = Button(game.screen,
@@ -282,7 +284,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "symbol to number") # Set screen to question type and set game to True or False
+                onClick=lambda: game.set_question_type_and_start_quiz(3) # Start quiz and set question type to name to symbol
                 )
 
                 button_4 = Button(game.screen,
@@ -297,7 +299,7 @@ def main():
                 inactiveColour="#FFFFFF",
                 pressedColour="#C1E1C1",
                 radius=2,
-                onClick=lambda: game.set_screen_and_question_type_and_start_quiz(3, "number to symbol") # Set screen to question type and set game to True or False
+                onClick=lambda: game.set_question_type_and_start_quiz(4) # Start quiz and set question type to symbol to name
                 )
 
             elif game.get_screen_number() == -1:
@@ -321,7 +323,7 @@ def main():
                 onClick=lambda: game.toggle_dark_mode() # Set screen to main menu
                 )
         
-        question_text.draw(game.screen)
+        dynamic_text.draw(game.screen)
         pygame_widgets.update(events)
         pg.display.flip()
         game.clock.tick(60)  # limits FPS to 60
