@@ -7,7 +7,7 @@ from Question import Question, MultipleChoiceQuestion #, InputQuestion, TrueFals
 from Quiz import Quiz
 from sprites import FontSprite
 
-# Constants
+# Constants for game
 WIDTH, HEIGHT = 720, 720
 QUESTION_TITLES = {
     1: "Atomic Number",
