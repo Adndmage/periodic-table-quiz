@@ -80,6 +80,9 @@ def main():
                 game.dynamic_text.add(FontSprite(50, 130, f"Highscore: {game.get_highscore()}", "lucidasanstypewriter", 20, placement="midleft"))
                 question_title_text = QUESTION_TITLES.get(game.get_question_type(), "Error")
                 game.dynamic_text.add(FontSprite(WIDTH/2, 60, f"What is the {question_title_text} for {game.quiz.get_questions()[game.get_current_question_number()].get_information()}?", "lucidasanstypewriter", 28))
+                
+                game.update_time_display()
+                game.dynamic_text.add(FontSprite(50, 160, game.time_display, "lucidasanstypewriter", 20, placement="midleft"))
 
                 if game.get_gamemode() == 1:
                     input_box = None
